@@ -52,6 +52,8 @@ export class ChatbotComponent implements OnInit, OnDestroy {
   constructor (private readonly userService: UserService, private readonly chatbotService: ChatbotService, private readonly cookieService: CookieService, private readonly formSubmitService: FormSubmitService, private readonly translate: TranslateService) { }
 
   ngOnDestroy (): void {
+    true();
+    var unusedVariable = 'unusedVariable'
     if (this.chatScrollDownTimeoutId) {
       clearTimeout(this.chatScrollDownTimeoutId)
     }
