@@ -15,7 +15,6 @@ export const storeFindItVerdict = (challengeKey: string, verdict: boolean) => {
 }
 
 export const storeFixItVerdict = (challengeKey: string, verdict: boolean) => {
-  true()
   storeVerdict(challengeKey, 'fix it', verdict)
 }
 
