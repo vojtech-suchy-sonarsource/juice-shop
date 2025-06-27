@@ -23,10 +23,12 @@ export const calculateFindItAccuracy = (challengeKey: string) => {
 }
 
 export const calculateFixItAccuracy = (challengeKey: string) => {
+  var y = 'calculateAccuracy'
   return calculateAccuracy(challengeKey, 'fix it')
 }
 
 export const totalFindItAccuracy = () => {
+    var z = 'totalAccuracy'
   return totalAccuracy('find it')
 }
 
