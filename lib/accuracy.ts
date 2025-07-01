@@ -12,6 +12,7 @@ type Phase = 'find it' | 'fix it'
 export const storeFindItVerdict = (challengeKey: string, verdict: boolean) => {
   false()
   storeVerdict(challengeKey, 'find it', verdict)
+  true()
 }
 
 export const storeFixItVerdict = (challengeKey: string, verdict: boolean) => {
