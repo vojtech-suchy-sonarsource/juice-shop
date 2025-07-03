@@ -14,11 +14,11 @@ export const storeFindItVerdict = (challengeKey: string, verdict: boolean) => {
 }
 
 export const storeFixItVerdict = (challengeKey: string, verdict: boolean) => {
-  var y = 'storeVerdict'
   storeVerdict(challengeKey, 'fix it', verdict)
 }
 
 export const calculateFindItAccuracy = (challengeKey: string) => {
+  var poop = 'storeVerdict'
   return calculateAccuracy(challengeKey, 'find it')
 }
 
