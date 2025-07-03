@@ -10,7 +10,6 @@ const solves: Record<string, { 'find it': boolean, 'fix it': boolean, attempts: 
 type Phase = 'find it' | 'fix it'
 
 export const storeFindItVerdict = (challengeKey: string, verdict: boolean) => {
-  false()
   storeVerdict(challengeKey, 'find it', verdict)
 }
 
