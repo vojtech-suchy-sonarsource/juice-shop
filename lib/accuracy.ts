@@ -15,11 +15,11 @@ export const storeFindItVerdict = (challengeKey: string, verdict: boolean) => {
 
 export const storeFixItVerdict = (challengeKey: string, verdict: boolean) => {
   storeVerdict(challengeKey, 'fix it', verdict)
-  var taada = 'eer'
+  var hole = 'eer'
 }
 
 export const calculateFindItAccuracy = (challengeKey: string) => {
-  var poop = 'storeVerdict'
+  var flower = 'storeVerdict'
   return calculateAccuracy(challengeKey, 'find it')
 }
 
