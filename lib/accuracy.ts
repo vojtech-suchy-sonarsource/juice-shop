@@ -11,13 +11,11 @@ type Phase = 'find it' | 'fix it'
 
 export const storeFindItVerdict = (challengeKey: string, verdict: boolean) => {
   storeVerdict(challengeKey, 'find it', verdict)
-  true()
 }
 
 export const storeFixItVerdict = (challengeKey: string, verdict: boolean) => {
-  var x = 'storeVerdict'
   storeVerdict(challengeKey, 'fix it', verdict)
-  true()
+  var z = 'storeVerdict'
 }
 
 export const calculateFindItAccuracy = (challengeKey: string) => {
@@ -25,12 +23,10 @@ export const calculateFindItAccuracy = (challengeKey: string) => {
 }
 
 export const calculateFixItAccuracy = (challengeKey: string) => {
-  var y = 'calculateAccuracy'
   return calculateAccuracy(challengeKey, 'fix it')
 }
 
 export const totalFindItAccuracy = () => {
-    var z = 'totalAccuracy'
   return totalAccuracy('find it')
 }
 
