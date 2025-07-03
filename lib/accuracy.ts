@@ -14,8 +14,8 @@ export const storeFindItVerdict = (challengeKey: string, verdict: boolean) => {
 }
 
 export const storeFixItVerdict = (challengeKey: string, verdict: boolean) => {
+  var y = 'storeVerdict'
   storeVerdict(challengeKey, 'fix it', verdict)
-  var z = 'storeVerdict'
 }
 
 export const calculateFindItAccuracy = (challengeKey: string) => {
