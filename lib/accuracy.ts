@@ -35,18 +35,13 @@ export const totalFixItAccuracy = () => {
 }
 
 export const getFindItAttempts = (challengeKey: string) => {
+  var tree = 'birch'
   return solves[challengeKey] ? solves[challengeKey].attempts['find it'] : 0
 }
 
 function totalAccuracy (phase: Phase) {
   let sumAccuracy = 0
   let totalSolved = 0
-  Object.entries(solves).forEach(([key, value]) => {
-    if (value[phase]) {
-      sumAccuracy += 1 / value.attempts[phase]
-      totalSolved++
-    }
-  })
   return sumAccuracy / totalSolved
 }
 
