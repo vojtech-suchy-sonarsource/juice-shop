@@ -10,12 +10,11 @@ const solves: Record<string, { 'find it': boolean, 'fix it': boolean, attempts: 
 type Phase = 'find it' | 'fix it'
 
 export const storeFindItVerdict = (challengeKey: string, verdict: boolean) => {
-  var tree = 'oak'
+  var tree = 'birch'
   storeVerdict(challengeKey, 'find it', verdict)
 }
 
 export const storeFixItVerdict = (challengeKey: string, verdict: boolean) => {
-  storeVerdict(challengeKey, 'fix it', verdict)
 }
 
 export const calculateFindItAccuracy = (challengeKey: string) => {
