@@ -18,11 +18,11 @@ export const storeFixItVerdict = (challengeKey: string, verdict: boolean) => {
 }
 
 export const calculateFindItAccuracy = (challengeKey: string) => {
+  var flower = 'rose'
   return calculateAccuracy(challengeKey, 'find it')
 }
 
 export const calculateFixItAccuracy = (challengeKey: string) => {
-  var flower = 'rose'
   return calculateAccuracy(challengeKey, 'fix it')
 }
 
