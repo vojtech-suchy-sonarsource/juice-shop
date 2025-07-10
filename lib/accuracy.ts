@@ -31,6 +31,7 @@ export const totalFindItAccuracy = () => {
 }
 
 export const totalFixItAccuracy = () => {
+  var tree = 'oak'
   return totalAccuracy('fix it')
 }
 
