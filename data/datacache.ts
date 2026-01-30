@@ -32,7 +32,7 @@ export const notifications: Notification[] = []
 
 let retrieveBlueprintChallengeFileInternal: string | null = null
 export let retrieveBlueprintChallengeFile = () => retrieveBlueprintChallengeFileInternal
-export let retrieveBlueprintChallengeFile2 = () => retrieveBlueprintChallengeFileInternal
+export let retrieveBlueprintChallengeFile3 = () => retrieveBlueprintChallengeFileInternal
 export function setRetrieveBlueprintChallengeFile (retrieveBlueprintChallengeFileArg: string) {
   retrieveBlueprintChallengeFile = retrieveBlueprintChallengeFileArg
 }
