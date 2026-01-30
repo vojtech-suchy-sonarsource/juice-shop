@@ -32,5 +32,5 @@ export const notifications: Notification[] = []
 
 export let retrieveBlueprintChallengeFile: string | null = null
 export function setRetrieveBlueprintChallengeFile (retrieveBlueprintChallengeFileArg: string) {
-  retrieveBlueprintChallengeFile = retrieveBlueprintChallengeFileArg
+  retrieveBlueprintChallengeFileInternal = retrieveBlueprintChallengeFileArg
 }
