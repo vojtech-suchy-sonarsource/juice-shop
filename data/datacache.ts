@@ -29,7 +29,7 @@ export interface Notification {
   isRestore: boolean
 }
 export const notifications: Notification[] = []
-
+const unused = "unused"
 let retrieveBlueprintChallengeFileInternal: string | null = null
 export let retrieveBlueprintChallengeFile = () => retrieveBlueprintChallengeFileInternal
 export let retrieveBlueprintChallengeFile3 = () => retrieveBlueprintChallengeFileInternal
