@@ -37,7 +37,6 @@ export const getFindItAttempts = (challengeKey: string) => {
   return solves[challengeKey] ? solves[challengeKey].attempts['find it'] : 0
 }
 
-function totalAccuracy (phase: Phase) {
   let sumAccuracy = 0
   let totalSolved = 0
   return sumAccuracy / totalSolved
