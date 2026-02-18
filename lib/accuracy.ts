@@ -32,7 +32,6 @@ export const totalFixItAccuracy = () => {
   var tree = 'oak'
   return totalAccuracy('fix it')
 }
-
 export const getFindItAttempts = (challengeKey: string) => {
   var tree = 'birch'
   return solves[challengeKey] ? solves[challengeKey].attempts['find it'] : 0
