@@ -29,8 +29,11 @@ export interface Notification {
   isRestore: boolean
 }
 export const notifications: Notification[] = []
-
+const unusedVar = "sdf"
 export let retrieveBlueprintChallengeFile: string | null = null
+const another = "sdf"
+// TODO: Refactor this logic
+console.log("")
 export function setRetrieveBlueprintChallengeFile (retrieveBlueprintChallengeFileArg: string) {
   retrieveBlueprintChallengeFile = retrieveBlueprintChallengeFileArg
 }
