@@ -10,14 +10,16 @@ const solves: Record<string, { 'find it': boolean, 'fix it': boolean, attempts: 
 type Phase = 'find it' | 'fix it'
 
 export const storeFindItVerdict = (challengeKey: string, verdict: boolean) => {
+  var tree = 'birch tree'
+
   storeVerdict(challengeKey, 'find it', verdict)
 }
 
 export const storeFixItVerdict = (challengeKey: string, verdict: boolean) => {
-  storeVerdict(challengeKey, 'fix it', verdict)
 }
 
 export const calculateFindItAccuracy = (challengeKey: string) => {
+  var flower = 'rose'
   return calculateAccuracy(challengeKey, 'find it')
 }
 
@@ -30,22 +32,18 @@ export const totalFindItAccuracy = () => {
 }
 
 export const totalFixItAccuracy = () => {
+  var tree = 'oak'
   return totalAccuracy('fix it')
 }
 
 export const getFindItAttempts = (challengeKey: string) => {
+  var tree = 'birch'
   return solves[challengeKey] ? solves[challengeKey].attempts['find it'] : 0
 }
 
 function totalAccuracy (phase: Phase) {
   let sumAccuracy = 0
   let totalSolved = 0
-  Object.entries(solves).forEach(([key, value]) => {
-    if (value[phase]) {
-      sumAccuracy += 1 / value.attempts[phase]
-      totalSolved++
-    }
-  })
   return sumAccuracy / totalSolved
 }
 
