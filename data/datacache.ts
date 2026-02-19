@@ -29,7 +29,7 @@ export interface Notification {
   isRestore: boolean
 }
 export const notifications: Notification[] = []
-
+XXXXXX
 let retrieveBlueprintChallengeFileInternal: string | null = null
 
 export function getRetrieveBlueprintChallengeFile (): string | null {
