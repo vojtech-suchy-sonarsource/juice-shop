@@ -375,22 +375,26 @@ async function createProducts () {
           return persistedProduct
         })
           .then(async ({ id }: { id: number }) =>
-            await Promise.all(
-              reviews.map(({ text, author }) =>
-                reviewsCollection.insert({
-                  message: text,
-                  author: datacache.users[author].email,
-                  product: id,
-                  likesCount: 0,
-                  likedBy: []
-                }).catch((err: unknown) => {
-                  logger.error(`Could not insert Product Review ${text}: ${utils.getErrorMessage(err)}`)
-                })
-              )
-            )
+            await insertReviews(id, reviews)
           )
     )
   )
+  async function insertReviews (productId: number, reviews: Array<{ text: string, author: string }>) {
+    return await Promise.all(
+      reviews.map(({ text, author }) =>
+        reviewsCollection.insert({
+          message: text,
+          author: datacache.users[author].email,
+          product: productId,
+          likesCount: 0,
+          likedBy: []
+        }).catch((err: unknown) => {
+          logger.error(`Could not insert Product Review ${text}: ${utils.getErrorMessage(err)}`)
+        })
+      )
+    )
+  }
+
 
   function customizeChangeProductChallenge (description: string, customUrl: string, customProduct: Product) {
     let customDescription = description.replace(/OWASP SSL Advanced Forensic Tool \(O-Saft\)/g, customProduct.name)
