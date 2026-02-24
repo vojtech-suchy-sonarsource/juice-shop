@@ -19237,7 +19237,7 @@ THREE.ShaderChunk = {
 	// http://outerra.blogspot.com/2012/11/maximizing-depth-buffer-range-and.html
 
 	// WebGL doesn't support gl_FragDepth out of the box, unless the EXT_frag_depth extension is available.  On platforms
-	// without EXT_frag_depth, we have to fall back on linear z-buffer in the fragment shader, which means that some long 
+	// without EXT_frag_depth, we have to fall back on linear z-buffer in the fragment shader, which means that some long
 	// faces close to the camera may have issues.	This can be worked around by tesselating the model more finely when
 	// the camera is near the surface.
 
@@ -28771,7 +28771,7 @@ THREE.FontUtils = {
 
 THREE.FontUtils.generateShapes = function( text, parameters ) {
 
-	// Parameters 
+	// Parameters
 
 	parameters = parameters || {};
 
@@ -33917,7 +33917,7 @@ THREE.ShapeGeometry.prototype.addShape = function ( shape, options ) {
  * @author bhouston / http://exocortex.com
  */
 
-// points - to create a closed torus, one must use a set of points 
+// points - to create a closed torus, one must use a set of points
 //    like so: [ a, b, c, d, a ], see first is the same as last.
 // segments - the number of circumference segments to create
 // phiStart - the starting radian
