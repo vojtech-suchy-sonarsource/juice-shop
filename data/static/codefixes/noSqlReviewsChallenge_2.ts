@@ -1,6 +1,6 @@
 module.exports = function productReviews () {
   return (req: Request, res: Response, next: NextFunction) => {
-    const user = security.authenticatedUsers.from(req)
+    const _user = security.authenticatedUsers.from(req)
     db.reviewsCollection.update(
       { _id: req.body.id },
       { $set: { message: req.body.message } }
