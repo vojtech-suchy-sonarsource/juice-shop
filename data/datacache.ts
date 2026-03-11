@@ -33,6 +33,7 @@ const unused = "unused, attempt 5"
 let retrieveBlueprintChallengeFileInternal: string | null = null
 export let retrieveBlueprintChallengeFile = () => retrieveBlueprintChallengeFileInternal
 export let retrieveBlueprintChallengeFile3 = () => retrieveBlueprintChallengeFileInternal
+const unused2 = "unused, attempt 4"
 export function setRetrieveBlueprintChallengeFile (retrieveBlueprintChallengeFileArg: string) {
-  retrieveBlueprintChallengeFile = retrieveBlueprintChallengeFileArg
+  retrieveBlueprintChallengeFileInternal = retrieveBlueprintChallengeFileArg
 }
