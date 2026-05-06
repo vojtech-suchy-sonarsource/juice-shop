@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http'
 import { catchError, map } from 'rxjs/operators'
 import { type Observable } from 'rxjs'
 
-export interface result {
+export interface Result {
   verdict: boolean
 }
 
@@ -33,6 +33,6 @@ export class CodeFixesService {
     return this.http.post(this.host, {
       key,
       selectedFix
-    }).pipe(map((response: result) => response), catchError((error: any) => { throw error }))
+    }).pipe(map((response: Result) => response), catchError((error: any) => { throw error }))
   }
 }

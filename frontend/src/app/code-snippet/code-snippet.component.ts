@@ -7,7 +7,7 @@ import { CodeSnippetService, type CodeSnippet } from '../Services/code-snippet.s
 import { CodeFixesService } from '../Services/code-fixes.service'
 import { CookieService } from 'ngx-cookie'
 import { ChallengeService } from '../Services/challenge.service'
-import { VulnLinesService, type result } from '../Services/vuln-lines.service'
+import { VulnLinesService, type Result } from '../Services/vuln-lines.service'
 import { Component, Inject, type OnInit } from '@angular/core'
 
 import { MAT_DIALOG_DATA } from '@angular/material/dialog'
@@ -112,7 +112,7 @@ export class CodeSnippetComponent implements OnInit {
   }
 
   checkLines = () => {
-    this.vulnLinesService.check(this.dialogData.key, this.selectedLines).subscribe((verdict: result) => {
+    this.vulnLinesService.check(this.dialogData.key, this.selectedLines).subscribe((verdict: Result) => {
       this.setVerdict(verdict.verdict)
       this.hint = verdict.hint
     })

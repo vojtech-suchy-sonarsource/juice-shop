@@ -54,8 +54,8 @@ export class OAuthComponent implements OnInit {
     const hash = this.route.snapshot.data.params.substr(1)
     const splitted = hash.split('&')
     const params: any = {}
-    for (let i = 0; i < splitted.length; i++) {
-      const param: string = splitted[i].split('=')
+    for (const element of splitted) {
+      const param: string = element.split('=')
       const key: string = param[0]
       params[key] = param[1]
     }
