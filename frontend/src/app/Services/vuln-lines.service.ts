@@ -3,7 +3,7 @@ import { environment } from '../../environments/environment'
 import { HttpClient } from '@angular/common/http'
 import { catchError, map } from 'rxjs/operators'
 
-export interface result {
+export interface Result {
   verdict: boolean
   hint: string
 }
@@ -21,6 +21,6 @@ export class VulnLinesService {
     return this.http.post(this.host, {
       key,
       selectedLines
-    }).pipe(map((response: result) => response), catchError((error: any) => { throw error }))
+    }).pipe(map((response: Result) => response), catchError((error: any) => { throw error }))
   }
 }
