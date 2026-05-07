@@ -76,7 +76,7 @@ export const notSolved = (challenge: any) => challenge && !challenge.solved
 
 export const findChallengeByName = (challengeName: string) => {
   for (const c in challenges) {
-    if (Object.prototype.hasOwnProperty.call(challenges, c)) {
+    if (Object.hasOwn(challenges, c)) {
       if (challenges[c].name === challengeName) {
         return challenges[c]
       }
