@@ -121,8 +121,8 @@ export class SearchResultComponent implements OnDestroy, AfterViewInit {
   }
 
   trustProductDescription (tableData: any[]) { // vuln-code-snippet neutral-line restfulXssChallenge
-    for (let i = 0; i < tableData.length; i++) { // vuln-code-snippet neutral-line restfulXssChallenge
-      tableData[i].description = this.sanitizer.bypassSecurityTrustHtml(tableData[i].description) // vuln-code-snippet vuln-line restfulXssChallenge
+    for (const element of tableData) { // vuln-code-snippet neutral-line restfulXssChallenge
+      element.description = this.sanitizer.bypassSecurityTrustHtml(element.description) // vuln-code-snippet vuln-line restfulXssChallenge
     } // vuln-code-snippet neutral-line restfulXssChallenge
   } // vuln-code-snippet neutral-line restfulXssChallenge
   // vuln-code-snippet end restfulXssChallenge
@@ -185,10 +185,10 @@ export class SearchResultComponent implements OnDestroy, AfterViewInit {
     this.basketService.find(Number(sessionStorage.getItem('bid'))).subscribe((basket) => {
       const productsInBasket: any = basket.Products
       let found = false
-      for (let i = 0; i < productsInBasket.length; i++) {
-        if (productsInBasket[i].id === id) {
+      for (const basketProduct of productsInBasket) {
+        if (basketProduct.id === id) {
           found = true
-          this.basketService.get(productsInBasket[i].BasketItem.id).subscribe((existingBasketItem) => {
+          this.basketService.get(basketProduct.BasketItem.id).subscribe((existingBasketItem) => {
             // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
             const newQuantity = existingBasketItem.quantity + 1
             this.basketService.put(existingBasketItem.id, { quantity: newQuantity }).subscribe((updatedBasketItem) => {
