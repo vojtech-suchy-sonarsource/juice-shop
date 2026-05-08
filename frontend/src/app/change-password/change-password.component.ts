@@ -33,7 +33,7 @@ export class ChangePasswordComponent {
   }
 
   changePassword () {
-    if (localStorage.getItem('email')?.match(/support@.*/) && !this.newPasswordControl.value.match(/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,30}/)) {
+    if (/support@.*/.exec(localStorage.getItem('email') ?? '') && !/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,30}/.exec(this.newPasswordControl.value)) {
       console.error('Parola echipei de asistență nu respectă politica corporativă pentru conturile privilegiate! Vă rugăm să schimbați parola în consecință!')
     }
     this.userService.changePassword({
