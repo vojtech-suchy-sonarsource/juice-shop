@@ -24,8 +24,6 @@ function hasDockerCGroup () {
 
 export default function isDocker () {
   // TODO: Use `??=` when targeting Node.js 16.
-  if (isDockerCached === undefined) {
-    isDockerCached = hasDockerEnv() || hasDockerCGroup()
-  }
+  isDockerCached ??= hasDockerEnv() || hasDockerCGroup()
   return isDockerCached
 }
