@@ -117,7 +117,7 @@ export const discountFromCoupon = (coupon: string) => {
 }
 
 function hasValidFormat (coupon: string) {
-  return coupon.match(/(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)[0-9]{2}-[0-9]{2}/)
+  return /(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)\d{2}-\d{2}/.exec(coupon)
 }
 
 // vuln-code-snippet start redirectCryptoCurrencyChallenge redirectChallenge

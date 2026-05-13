@@ -87,7 +87,7 @@ export const findChallengeByName = (challengeName: string) => {
 
 export const findChallengeById = (challengeId: number) => {
   for (const c in challenges) {
-    if (Object.prototype.hasOwnProperty.call(challenges, c)) {
+    if (Object.hasOwn(challenges, c)) {
       if (challenges[c].id === challengeId) {
         return challenges[c]
       }
