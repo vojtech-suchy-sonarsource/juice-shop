@@ -23,8 +23,8 @@ module.exports = function retrieveBasket () {
           return user && id && id !== 'undefined' && id !== 'null' && id !== 'NaN' && user.bid && user.bid != id // eslint-disable-line eqeqeq
         })
         if (((basket?.Products) != null) && basket.Products.length > 0) {
-          for (let i = 0; i < basket.Products.length; i++) {
-            basket.Products[i].name = req.__(basket.Products[i].name)
+          for (const product of basket.Products) {
+            product.name = req.__(product.name)
           }
         }
 
