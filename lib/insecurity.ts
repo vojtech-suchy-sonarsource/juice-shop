@@ -139,6 +139,15 @@ export const isRedirectAllowed = (url: string) => {
   }
   return allowed
 }
+
+export const getAllowedRedirectUrl = (url: string): string | undefined => {
+  for (const allowedUrl of redirectAllowlist) {
+    if (url.includes(allowedUrl)) {
+      return allowedUrl
+    }
+  }
+  return undefined
+}
 // vuln-code-snippet end redirectCryptoCurrencyChallenge redirectChallenge
 
 export const roles = {
