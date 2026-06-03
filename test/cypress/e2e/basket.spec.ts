@@ -1,3 +1,51 @@
+async function manipulateBasketItem () {
+  await fetch(`${Cypress.config('baseUrl')}/api/BasketItems/`, {
+    method: 'POST',
+    cache: 'no-cache',
+    headers: {
+      'Content-type': 'application/json',
+      Authorization: `Bearer ${localStorage.getItem('token')}`
+    },
+    body: '{ "ProductId": 14,"BasketId":"1","quantity":1,"BasketId":"2" }'
+  })
+}
+
+function setCouponPanelCollapsed () {
+  window.localStorage.couponPanelExpanded = false
+}
+
+function overrideDateToWomensDay (win: Cypress.AUTWindow) {
+  cy.on('uncaught:exception', (_err, _runnable) => {
+    // Introduced to disbale the uncaught:exception we get after the eval under this as TypeError: Date.now is not a function
+    return false
+  })
+  win.eval(
+    'event = new Date("March 08, 2019 00:00:00"); Date = function(Date){return function() {date = event; return date; }}(Date);'
+  )
+}
+
+async function addProductToBasket () {
+  const response = await fetch(
+    `${Cypress.config('baseUrl')}/api/BasketItems/`,
+    {
+      method: 'POST',
+      cache: 'no-cache',
+      headers: {
+        'Content-type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      },
+      body: JSON.stringify({
+        BasketId: `${sessionStorage.getItem('bid')}`,
+        ProductId: 1,
+        quantity: 1
+      })
+    }
+  )
+  if (response.status === 201) {
+    console.log('Success')
+  }
+}
+
 describe('/#/basket', () => {
   describe('as admin', () => {
     beforeEach(() => {
@@ -55,17 +103,7 @@ describe('/#/basket', () => {
 
     describe('challenge "basketManipulateChallenge"', () => {
       it('should manipulate basket of other user instead of the one associated to logged-in user', () => {
-        cy.window().then(async () => {
-          await fetch(`${Cypress.config('baseUrl')}/api/BasketItems/`, {
-            method: 'POST',
-            cache: 'no-cache',
-            headers: {
-              'Content-type': 'application/json',
-              Authorization: `Bearer ${localStorage.getItem('token')}`
-            },
-            body: '{ "ProductId": 14,"BasketId":"1","quantity":1,"BasketId":"2" }'
-          })
-        })
+        cy.window().then(manipulateBasketItem)
         cy.expectChallengeSolved({ challenge: 'Manipulate Basket' })
       })
     })
@@ -77,20 +115,10 @@ describe('/#/basket', () => {
     })
     describe('challenge "manipulateClock"', () => {
       it('should be possible to enter WMNSDY2019 coupon & place order with this expired coupon', () => {
-        cy.window().then(() => {
-          window.localStorage.couponPanelExpanded = false
-        })
+        cy.window().then(setCouponPanelCollapsed)
         cy.visit('/#/payment/shop')
 
-        cy.window().then((win) => {
-          cy.on('uncaught:exception', (_err, _runnable) => {
-            // Introduced to disbale the uncaught:exception we get after the eval under this as TypeError: Date.now is not a function
-            return false
-          })
-          win.eval(
-            'event = new Date("March 08, 2019 00:00:00"); Date = function(Date){return function() {date = event; return date; }}(Date);'
-          )
-        })
+        cy.window().then(overrideDateToWomensDay)
         cy.get('#collapseCouponElement').click()
 
         cy.get('#coupon').type('WMNSDY2019')
@@ -108,27 +136,7 @@ describe('/#/basket', () => {
       })
 
       it('should be possible to add a product in the basket', () => {
-        cy.window().then(async () => {
-          const response = await fetch(
-            `${Cypress.config('baseUrl')}/api/BasketItems/`,
-            {
-              method: 'POST',
-              cache: 'no-cache',
-              headers: {
-                'Content-type': 'application/json',
-                Authorization: `Bearer ${localStorage.getItem('token')}`
-              },
-              body: JSON.stringify({
-                BasketId: `${sessionStorage.getItem('bid')}`,
-                ProductId: 1,
-                quantity: 1
-              })
-            }
-          )
-          if (response.status === 201) {
-            console.log('Success')
-          }
-        })
+        cy.window().then(addProductToBasket)
       })
 
       it('should be possible to enter a coupon that gives an 80% discount', () => {
