@@ -45,7 +45,7 @@ module.exports = function placeOrder () {
           const fileWriter = doc.pipe(fs.createWriteStream(path.join('ftp/', pdfFile)))
 
           fileWriter.on('finish', async () => {
-            void basket.update({ coupon: null })
+            await basket.update({ coupon: null })
             await BasketItemModel.destroy({ where: { BasketId: id } })
             res.json({ orderConfirmation: orderId })
           })
@@ -67,15 +67,7 @@ module.exports = function placeOrder () {
           let totalPoints = 0
           basket.Products?.forEach(({ BasketItem, price, deluxePrice, name, id }) => {
             if (BasketItem != null) {
-              challengeUtils.solveIf(challenges.christmasSpecialChallenge, () => { return BasketItem.ProductId === products.christmasSpecial.id })
-              QuantityModel.findOne({ where: { ProductId: BasketItem.ProductId } }).then((product: any) => {
-                const newQuantity = product.quantity - BasketItem.quantity
-                QuantityModel.update({ quantity: newQuantity }, { where: { ProductId: BasketItem?.ProductId } }).catch((error: unknown) => {
-                  next(error)
-                })
-              }).catch((error: unknown) => {
-                next(error)
-              })
+              processBasketItem(BasketItem, next)
               let itemPrice: number
               if (security.isDeluxe(req)) {
                 itemPrice = deluxePrice
@@ -173,6 +165,18 @@ module.exports = function placeOrder () {
         next(error)
       })
   }
+}
+
+function processBasketItem (BasketItem: any, next: NextFunction) {
+  challengeUtils.solveIf(challenges.christmasSpecialChallenge, () => { return BasketItem.ProductId === products.christmasSpecial.id })
+  QuantityModel.findOne({ where: { ProductId: BasketItem.ProductId } }).then((product: any) => {
+    const newQuantity = product.quantity - BasketItem.quantity
+    QuantityModel.update({ quantity: newQuantity }, { where: { ProductId: BasketItem?.ProductId } }).catch((error: unknown) => {
+      next(error)
+    })
+  }).catch((error: unknown) => {
+    next(error)
+  })
 }
 
 function calculateApplicableDiscount (basket: BasketModel, req: Request) {
