@@ -22,7 +22,11 @@ import { challenges } from '../data/datacache'
 
 let trainingFile = config.get<string>('application.chatBot.trainingData')
 let testCommand: string
-export let bot: Bot | null = null
+let bot: Bot | null = null
+
+export function getBot (): Bot | null {
+  return bot
+}
 
 export async function initialize () {
   if (utils.isUrl(trainingFile)) {
