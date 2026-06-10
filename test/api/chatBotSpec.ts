@@ -6,7 +6,7 @@
 import frisby = require('frisby')
 import { expect } from '@jest/globals'
 import config from 'config'
-import { initialize, bot } from '../../routes/chatbot'
+import { initialize, getBot } from '../../routes/chatbot'
 import fs from 'fs/promises'
 import * as utils from '../../lib/utils'
 
@@ -100,6 +100,7 @@ describe('/chatbot', () => {
     })
 
     it('Returns greeting if username is defined', async () => {
+      const bot = getBot()
       if (bot == null) {
         throw new Error('Bot not initialized')
       }
@@ -132,6 +133,7 @@ describe('/chatbot', () => {
     })
 
     it('Returns proper response for registered user', async () => {
+      const bot = getBot()
       if (bot == null) {
         throw new Error('Bot not initialized')
       }

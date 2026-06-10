@@ -21,32 +21,34 @@ function ensureFileIsPassed ({ file }: Request, res: Response, next: NextFunctio
   }
 }
 
-function handleZipFileUpload ({ file }: Request, res: Response, next: NextFunction) {
+function processZipEntry (entry: any, next: NextFunction) {
+  const fileName = entry.path
+  const absolutePath = path.resolve('uploads/complaints/' + fileName)
+  challengeUtils.solveIf(challenges.fileWriteChallenge, () => { return absolutePath === path.resolve('ftp/legal.md') })
+  if (absolutePath.includes(path.resolve('.'))) {
+    entry.pipe(fs.createWriteStream('uploads/complaints/' + fileName).on('error', function (err) { next(err) }))
+  } else {
+    entry.autodrain()
+  }
+}
+
+async function handleZipFileUpload ({ file }: Request, res: Response, next: NextFunction) {
   if (utils.endsWith(file?.originalname.toLowerCase(), '.zip')) {
     if (((file?.buffer) != null) && utils.isChallengeEnabled(challenges.fileWriteChallenge)) {
       const buffer = file.buffer
       const filename = file.originalname.toLowerCase()
       const tempFile = path.join(os.tmpdir(), filename)
-      fs.open(tempFile, 'w', function (err, fd) {
-        if (err != null) { next(err) }
-        fs.write(fd, buffer, 0, buffer.length, null, function (err) {
-          if (err != null) { next(err) }
-          fs.close(fd, function () {
-            fs.createReadStream(tempFile)
-              .pipe(unzipper.Parse())
-              .on('entry', function (entry: any) {
-                const fileName = entry.path
-                const absolutePath = path.resolve('uploads/complaints/' + fileName)
-                challengeUtils.solveIf(challenges.fileWriteChallenge, () => { return absolutePath === path.resolve('ftp/legal.md') })
-                if (absolutePath.includes(path.resolve('.'))) {
-                  entry.pipe(fs.createWriteStream('uploads/complaints/' + fileName).on('error', function (err) { next(err) }))
-                } else {
-                  entry.autodrain()
-                }
-              }).on('error', function (err: unknown) { next(err) })
-          })
-        })
-      })
+      try {
+        const fd = await fs.promises.open(tempFile, 'w')
+        await fd.write(buffer, 0, buffer.length)
+        await fd.close()
+        fs.createReadStream(tempFile)
+          .pipe(unzipper.Parse())
+          .on('entry', function (entry: any) { processZipEntry(entry, next) })
+          .on('error', function (err: unknown) { next(err) })
+      } catch (err) {
+        next(err)
+      }
     }
     res.status(204).end()
   } else {
