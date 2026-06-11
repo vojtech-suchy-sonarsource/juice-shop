@@ -32,18 +32,14 @@ module.exports = function resetPassword () {
           model: UserModel,
           where: { email }
         }]
-      }).then((data: SecurityAnswerModel | null) => {
+      }).then(async (data: SecurityAnswerModel | null) => {
         if ((data != null) && security.hmac(answer) === data.answer) {
-          UserModel.findByPk(data.UserId).then((user: UserModel | null) => {
-            user?.update({ password: newPassword }).then((user: UserModel) => {
-              verifySecurityAnswerChallenges(user, answer)
-              res.json({ user })
-            }).catch((error: unknown) => {
-              next(error)
-            })
-          }).catch((error: unknown) => {
-            next(error)
-          })
+          const user = await UserModel.findByPk(data.UserId)
+          const updatedUser = await user?.update({ password: newPassword })
+          if (updatedUser) {
+            verifySecurityAnswerChallenges(updatedUser, answer)
+            res.json({ user: updatedUser })
+          }
         } else {
           res.status(401).send(res.__('Wrong answer to security question.'))
         }
