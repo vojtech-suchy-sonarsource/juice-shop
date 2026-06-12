@@ -44,7 +44,7 @@ module.exports = function searchProducts () {
         }
         if (challengeUtils.notSolved(challenges.dbSchemaChallenge)) {
           let solved = true
-          void models.sequelize.query('SELECT sql FROM sqlite_master').then(([data]: any) => {
+          models.sequelize.query('SELECT sql FROM sqlite_master').then(([data]: any) => {
             const tableDefinitions = utils.queryResultToJson(data)
             if (tableDefinitions.data?.length) {
               for (let i = 0; i < tableDefinitions.data.length; i++) {
@@ -59,6 +59,8 @@ module.exports = function searchProducts () {
                 challengeUtils.solve(challenges.dbSchemaChallenge)
               }
             }
+          }).catch((error: Error) => {
+            next(error)
           })
         } // vuln-code-snippet hide-end
         for (let i = 0; i < products.length; i++) {
