@@ -209,11 +209,11 @@ exports.observeMetrics = function observeMetrics () {
         if (count) userTotalMetrics.set(count)
       })
 
-      void WalletModel.sum('balance').then((totalBalance: number) => {
+      WalletModel.sum('balance').then((totalBalance: number) => {
         if (totalBalance) walletMetrics.set(totalBalance)
       })
 
-      void FeedbackModel.count().then((count: number) => {
+      FeedbackModel.count().then((count: number) => {
         if (count) interactionsMetrics.set({ type: 'feedback' }, count)
       })
 
