@@ -11,6 +11,7 @@ import logger from '../lib/logger'
 import * as utils from '../lib/utils'
 const security = require('../lib/insecurity')
 const fileType = require('file-type')
+const closeOnEmpty = () => { }
 
 module.exports = function fileUpload () {
   return async (req: Request, res: Response, next: NextFunction) => {
@@ -30,7 +31,7 @@ module.exports = function fileUpload () {
             // @ts-expect-error FIXME buffer has unexpected type
             fs.write(fd, buffer, 0, buffer.length, null, function (err) {
               if (err != null) logger.warn('Error writing file: ' + err.message)
-              fs.close(fd, function () { })
+              fs.close(fd, closeOnEmpty)
             })
           })
           UserModel.findByPk(loggedInUser.data.id).then(async (user: UserModel | null) => {
