@@ -141,6 +141,26 @@ exports.observeMetrics = function observeMetrics () {
     labelNames: ['type']
   })
 
+  const updateCodingChallengesMetrics = (challenges: string[]) => {
+    ChallengeModel.count({ where: { codingChallengeStatus: { [Op.eq]: 1 } } }).then((count: number) => {
+      codingChallengesProgressMetrics.set({ phase: 'find it' }, count)
+    }).catch(() => {
+      throw new Error('Unable to retrieve and count such challenges. Please try again')
+    })
+
+    ChallengeModel.count({ where: { codingChallengeStatus: { [Op.eq]: 2 } } }).then((count: number) => {
+      codingChallengesProgressMetrics.set({ phase: 'fix it' }, count)
+    }).catch((_: unknown) => {
+      throw new Error('Unable to retrieve and count such challenges. Please try again')
+    })
+
+    ChallengeModel.count({ where: { codingChallengeStatus: { [Op.ne]: 0 } } }).then((count: number) => {
+      codingChallengesProgressMetrics.set({ phase: 'unsolved' }, challenges.length - count)
+    }).catch((_: unknown) => {
+      throw new Error('Unable to retrieve and count such challenges. Please try again')
+    })
+  }
+
   const updateLoop = () => setInterval(() => {
     try {
       const version = utils.version()
@@ -165,25 +185,7 @@ exports.observeMetrics = function observeMetrics () {
         challengeTotalMetrics.set({ difficulty, category }, challengeCount.get(key))
       }
 
-      void retrieveChallengesWithCodeSnippet().then(challenges => {
-        ChallengeModel.count({ where: { codingChallengeStatus: { [Op.eq]: 1 } } }).then((count: number) => {
-          codingChallengesProgressMetrics.set({ phase: 'find it' }, count)
-        }).catch(() => {
-          throw new Error('Unable to retrieve and count such challenges. Please try again')
-        })
-
-        ChallengeModel.count({ where: { codingChallengeStatus: { [Op.eq]: 2 } } }).then((count: number) => {
-          codingChallengesProgressMetrics.set({ phase: 'fix it' }, count)
-        }).catch((_: unknown) => {
-          throw new Error('Unable to retrieve and count such challenges. Please try again')
-        })
-
-        ChallengeModel.count({ where: { codingChallengeStatus: { [Op.ne]: 0 } } }).then((count: number) => {
-          codingChallengesProgressMetrics.set({ phase: 'unsolved' }, challenges.length - count)
-        }).catch((_: unknown) => {
-          throw new Error('Unable to retrieve and count such challenges. Please try again')
-        })
-      })
+      retrieveChallengesWithCodeSnippet().then(updateCodingChallengesMetrics)
 
       cheatScoreMetrics.set(totalCheatScore())
       accuracyMetrics.set({ phase: 'find it' }, accuracy.totalFindItAccuracy())
@@ -217,7 +219,7 @@ exports.observeMetrics = function observeMetrics () {
         if (count) interactionsMetrics.set({ type: 'feedback' }, count)
       })
 
-      void ComplaintModel.count().then((count: number) => {
+      ComplaintModel.count().then((count: number) => {
         if (count) interactionsMetrics.set({ type: 'complaint' }, count)
       })
     } catch (e: unknown) {
