@@ -11,6 +11,46 @@ import { challenges } from '../data/datacache'
 
 const security = require('../lib/insecurity')
 
+function handleLikeUpdate (id: string, userEmail: string, res: Response) {
+  db.reviewsCollection.findOne({ _id: id }).then((review: Review) => {
+    const likedBy = review.likedBy
+    likedBy.push(userEmail)
+    let count = 0
+    for (const entry of likedBy) {
+      if (entry === userEmail) {
+        count++
+      }
+    }
+    challengeUtils.solveIf(challenges.timingAttackChallenge, () => { return count > 2 })
+    db.reviewsCollection.update(
+      { _id: id },
+      { $set: { likedBy } }
+    ).then(
+      (result: any) => {
+        res.json(result)
+      }, (err: unknown) => {
+        res.status(500).json(err)
+      })
+  }, () => {
+    res.status(400).json({ error: 'Wrong Params' })
+  })
+}
+
+function processLike (id: string, userEmail: string, res: Response) {
+  db.reviewsCollection.update(
+    { _id: id },
+    { $inc: { likesCount: 1 } }
+  ).then(
+    () => {
+      // Artificial wait for timing attack challenge
+      setTimeout(function () {
+        handleLikeUpdate(id, userEmail, res)
+      }, 150)
+    }, (err: unknown) => {
+      res.status(500).json(err)
+    })
+}
+
 module.exports = function productReviews () {
   return (req: Request, res: Response, next: NextFunction) => {
     const id = req.body.id
@@ -21,39 +61,7 @@ module.exports = function productReviews () {
       } else {
         const likedBy = review.likedBy
         if (!likedBy.includes(user.data.email)) {
-          db.reviewsCollection.update(
-            { _id: id },
-            { $inc: { likesCount: 1 } }
-          ).then(
-            () => {
-              // Artificial wait for timing attack challenge
-              setTimeout(function () {
-                db.reviewsCollection.findOne({ _id: id }).then((review: Review) => {
-                  const likedBy = review.likedBy
-                  likedBy.push(user.data.email)
-                  let count = 0
-                  for (let i = 0; i < likedBy.length; i++) {
-                    if (likedBy[i] === user.data.email) {
-                      count++
-                    }
-                  }
-                  challengeUtils.solveIf(challenges.timingAttackChallenge, () => { return count > 2 })
-                  db.reviewsCollection.update(
-                    { _id: id },
-                    { $set: { likedBy } }
-                  ).then(
-                    (result: any) => {
-                      res.json(result)
-                    }, (err: unknown) => {
-                      res.status(500).json(err)
-                    })
-                }, () => {
-                  res.status(400).json({ error: 'Wrong Params' })
-                })
-              }, 150)
-            }, (err: unknown) => {
-              res.status(500).json(err)
-            })
+          processLike(id, user.data.email, res)
         } else {
           res.status(403).json({ error: 'Not allowed' })
         }
