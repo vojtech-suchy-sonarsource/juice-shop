@@ -11,6 +11,11 @@ const security = require('../lib/insecurity')
 const cache = require('../data/datacache')
 const challenges = cache.challenges
 
+function handlePasswordChange (user: UserModel, currentPassword: string | string[] | undefined, res: Response) {
+  challengeUtils.solveIf(challenges.changePasswordBenderChallenge, () => { return user.id === 3 && !currentPassword && user.password === security.hash('slurmCl4ssic') })
+  res.json({ user })
+}
+
 module.exports = function changePassword () {
   return ({ query, headers, connection }: Request, res: Response, next: NextFunction) => {
     const currentPassword = query.current
@@ -31,8 +36,7 @@ module.exports = function changePassword () {
           UserModel.findByPk(loggedInUser.data.id).then((user: UserModel | null) => {
             if (user != null) {
               user.update({ password: newPasswordInString }).then((user: UserModel) => {
-                challengeUtils.solveIf(challenges.changePasswordBenderChallenge, () => { return user.id === 3 && !currentPassword && user.password === security.hash('slurmCl4ssic') })
-                res.json({ user })
+                handlePasswordChange(user, currentPassword, res)
               }).catch((error: Error) => {
                 next(error)
               })

@@ -17,6 +17,10 @@ const pug = require('pug')
 const themes = require('../views/themes/themes').themes
 const entities = new Entities()
 
+function checkUsernameXssChallenge (user: UserModel | null, username: string | undefined): boolean {
+  return user?.profileImage.match(/;[ ]*script-src(.)*'unsafe-inline'/g) !== null && utils.contains(username, '<script>alert(`xss`)</script>')
+}
+
 module.exports = function getUserProfile () {
   return (req: Request, res: Response, next: NextFunction) => {
     fs.readFile('views/userProfile.pug', function (err, buf) {
@@ -56,7 +60,7 @@ module.exports = function getUserProfile () {
           const fn = pug.compile(template)
           const CSP = `img-src 'self' ${user?.profileImage}; script-src 'self' 'unsafe-eval' https://code.getmdl.io http://ajax.googleapis.com`
           // @ts-expect-error FIXME type issue with string vs. undefined for username
-          challengeUtils.solveIf(challenges.usernameXssChallenge, () => { return user?.profileImage.match(/;[ ]*script-src(.)*'unsafe-inline'/g) !== null && utils.contains(username, '<script>alert(`xss`)</script>') })
+          challengeUtils.solveIf(challenges.usernameXssChallenge, checkUsernameXssChallenge.bind(null, user, username))
 
           res.set({
             'Content-Security-Policy': CSP
