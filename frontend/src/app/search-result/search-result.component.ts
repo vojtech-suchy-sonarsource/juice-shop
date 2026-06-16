@@ -192,15 +192,7 @@ export class SearchResultComponent implements OnDestroy, AfterViewInit {
             // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
             const newQuantity = existingBasketItem.quantity + 1
             this.basketService.put(existingBasketItem.id, { quantity: newQuantity }).subscribe((updatedBasketItem) => {
-              this.productService.get(updatedBasketItem.ProductId).subscribe((product) => {
-                this.translateService.get('BASKET_ADD_SAME_PRODUCT', { product: product.name }).subscribe((basketAddSameProduct) => {
-                  this.snackBarHelperService.open(basketAddSameProduct, 'confirmBar')
-                  this.basketService.updateNumberOfCartItems()
-                }, (translationId) => {
-                  this.snackBarHelperService.open(translationId, 'confirmBar')
-                  this.basketService.updateNumberOfCartItems()
-                })
-              }, (err) => { console.log(err) })
+              this.showProductAddedMessage(updatedBasketItem.ProductId, 'BASKET_ADD_SAME_PRODUCT')
             }, (err) => {
               this.snackBarHelperService.open(err.error?.error, 'errorBar')
               console.log(err)
@@ -211,20 +203,24 @@ export class SearchResultComponent implements OnDestroy, AfterViewInit {
       }
       if (!found) {
         this.basketService.save({ ProductId: id, BasketId: sessionStorage.getItem('bid'), quantity: 1 }).subscribe((newBasketItem) => {
-          this.productService.get(newBasketItem.ProductId).subscribe((product) => {
-            this.translateService.get('BASKET_ADD_PRODUCT', { product: product.name }).subscribe((basketAddProduct) => {
-              this.snackBarHelperService.open(basketAddProduct, 'confirmBar')
-              this.basketService.updateNumberOfCartItems()
-            }, (translationId) => {
-              this.snackBarHelperService.open(translationId, 'confirmBar')
-              this.basketService.updateNumberOfCartItems()
-            })
-          }, (err) => { console.log(err) })
+          this.showProductAddedMessage(newBasketItem.ProductId, 'BASKET_ADD_PRODUCT')
         }, (err) => {
           this.snackBarHelperService.open(err.error?.error, 'errorBar')
           console.log(err)
         })
       }
+    }, (err) => { console.log(err) })
+  }
+
+  private showProductAddedMessage (productId: number, translationKey: string) {
+    this.productService.get(productId).subscribe((product) => {
+      this.translateService.get(translationKey, { product: product.name }).subscribe((message) => {
+        this.snackBarHelperService.open(message, 'confirmBar')
+        this.basketService.updateNumberOfCartItems()
+      }, (translationId) => {
+        this.snackBarHelperService.open(translationId, 'confirmBar')
+        this.basketService.updateNumberOfCartItems()
+      })
     }, (err) => { console.log(err) })
   }
 

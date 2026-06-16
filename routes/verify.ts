@@ -165,7 +165,7 @@ exports.databaseRelatedChallenges = () => (req: Request, res: Response, next: Ne
 
 function changeProductChallenge (osaft: Product) {
   let urlForProductTamperingChallenge: string | null = null
-  void osaft.reload().then(() => {
+  osaft.reload().then(() => {
     for (const product of config.get<ProductConfig[]>('products')) {
       if (product.urlForProductTamperingChallenge !== undefined) {
         urlForProductTamperingChallenge = product.urlForProductTamperingChallenge
