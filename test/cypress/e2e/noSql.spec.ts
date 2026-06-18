@@ -1,3 +1,37 @@
+async function sendPostRequest (reviewId: string) {
+  const anotherResponse = await fetch(
+    `${Cypress.config('baseUrl')}/rest/products/reviews`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      },
+      body: JSON.stringify({ id: reviewId })
+    }
+  )
+  if (anotherResponse.status === 200) {
+    console.log('Success')
+  }
+}
+
+async function editReview (reviewId: string) {
+  const response = await fetch(
+    `${Cypress.config('baseUrl')}/rest/products/reviews`,
+    {
+      method: 'PATCH',
+      headers: {
+        'Content-type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      },
+      body: JSON.stringify({ id: reviewId, message: 'injected' })
+    }
+  )
+  if (response.status === 200) {
+    console.log('Success')
+  }
+}
+
 describe('/rest/products/reviews', () => {
   beforeEach(() => {
     cy.visit('/#/search')
@@ -93,23 +127,6 @@ describe('/rest/products/reviews', () => {
           const reviewId = responseJson.data[0]._id
           await editReview(reviewId)
         }
-
-        async function editReview (reviewId: string) {
-          const response = await fetch(
-            `${Cypress.config('baseUrl')}/rest/products/reviews`,
-            {
-              method: 'PATCH',
-              headers: {
-                'Content-type': 'application/json',
-                Authorization: `Bearer ${localStorage.getItem('token')}`
-              },
-              body: JSON.stringify({ id: reviewId, message: 'injected' })
-            }
-          )
-          if (response.status === 200) {
-            console.log('Success')
-          }
-        }
       })
       cy.expectChallengeSolved({ challenge: 'Forged Review' })
     })
@@ -123,23 +140,6 @@ describe('/rest/products/reviews', () => {
     it('should be possible to like reviews multiple times', () => {
       cy.visit('/')
       cy.window().then(async () => {
-        async function sendPostRequest (reviewId: string) {
-          const anotherResponse = await fetch(
-            `${Cypress.config('baseUrl')}/rest/products/reviews`,
-            {
-              method: 'POST',
-              headers: {
-                'Content-type': 'application/json',
-                Authorization: `Bearer ${localStorage.getItem('token')}`
-              },
-              body: JSON.stringify({ id: reviewId })
-            }
-          )
-          if (anotherResponse.status === 200) {
-            console.log('Success')
-          }
-        }
-
         const response = await fetch(
           `${Cypress.config('baseUrl')}/rest/products/1/reviews`,
           {

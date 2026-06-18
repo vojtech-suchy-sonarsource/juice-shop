@@ -1,5 +1,44 @@
 import { type Product } from '../../../data/types'
 
+function verifyProductInSearchResults (sourceContent: { data: Product[] }, taskName: string) {
+  cy.task<Product>(taskName).then((targetProduct: Product) => {
+    const foundProduct = sourceContent.data.some((product: Product) => product.name === targetProduct.name)
+    expect(foundProduct).to.be.true
+  })
+}
+
+function addChristmasProductToBasket (sourceContent: { data: Product[] }) {
+  cy.task<Product>('GetChristmasProduct').then((christmasProduct: Product) => {
+    sourceContent.data.forEach((product: Product) => {
+      if (product.name === christmasProduct.name) {
+        cy.window().then(async () => {
+          const response = await fetch(
+            `${Cypress.config('baseUrl')}/api/BasketItems/`,
+            {
+              method: 'POST',
+              cache: 'no-cache',
+              headers: {
+                'Content-type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem(
+                  'token'
+                )}`
+              },
+              body: JSON.stringify({
+                BasketId: `${sessionStorage.getItem('bid')}`,
+                ProductId: `${product.id}`,
+                quantity: 1
+              })
+            }
+          )
+          if (response.status === 201) {
+            console.log('Success')
+          }
+        })
+      }
+    })
+  })
+}
+
 describe('/#/search', () => {
   beforeEach(() => {
     cy.visit('/#/search')
@@ -61,17 +100,8 @@ describe('/rest/products/search', () => {
       cy.request("/rest/products/search?q='))--")
         .its('body')
         .then((sourceContent) => {
-          cy.task<Product>('GetPastebinLeakProduct').then((pastebinLeakProduct: Product) => {
-            let foundProduct = false
-
-            sourceContent.data.forEach((product: Product) => {
-              if (product.name === pastebinLeakProduct.name) {
-                foundProduct = true
-              }
-            })
-            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-            expect(foundProduct).to.be.true
-          })
+          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+          verifyProductInSearchResults(sourceContent, 'GetPastebinLeakProduct')
         })
     })
   })
@@ -88,17 +118,8 @@ describe('/rest/products/search', () => {
       cy.request("/rest/products/search?q='))--")
         .its('body')
         .then((sourceContent) => {
-          cy.task<Product>('GetChristmasProduct').then((christmasProduct: Product) => {
-            let foundProduct = false
-
-            sourceContent.data.forEach((product: Product) => {
-              if (product.name === christmasProduct.name) {
-                foundProduct = true
-              }
-            })
-            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-            expect(foundProduct).to.be.true
-          })
+          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+          verifyProductInSearchResults(sourceContent, 'GetChristmasProduct')
         })
     })
 
@@ -106,35 +127,7 @@ describe('/rest/products/search', () => {
       cy.request('/api/products')
         .its('body')
         .then((sourceContent) => {
-          cy.task<Product>('GetChristmasProduct').then((christmasProduct: Product) => {
-            sourceContent.data.forEach((product: Product) => {
-              if (product.name === christmasProduct.name) {
-                cy.window().then(async () => {
-                  const response = await fetch(
-                    `${Cypress.config('baseUrl')}/api/BasketItems/`,
-                    {
-                      method: 'POST',
-                      cache: 'no-cache',
-                      headers: {
-                        'Content-type': 'application/json',
-                        Authorization: `Bearer ${localStorage.getItem(
-                          'token'
-                        )}`
-                      },
-                      body: JSON.stringify({
-                        BasketId: `${sessionStorage.getItem('bid')}`,
-                        ProductId: `${product.id}`,
-                        quantity: 1
-                      })
-                    }
-                  )
-                  if (response.status === 201) {
-                    console.log('Success')
-                  }
-                })
-              }
-            })
-          })
+          addChristmasProductToBasket(sourceContent)
         })
 
       cy.visit('/#/basket')
