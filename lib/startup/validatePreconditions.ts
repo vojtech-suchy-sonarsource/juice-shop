@@ -100,15 +100,13 @@ export const checkIfPortIsAvailable = async (port: number | string) => {
   return await new Promise((resolve, reject) => {
     portscanner.checkPortStatus(portNumber, function (error: unknown, status: string) {
       if (error) {
-        reject(error)
+        reject(error instanceof Error ? error : new Error('Port status check failed'))
+      } else if (status === 'open') {
+        logger.warn(`Port ${colors.bold(port.toString())} is in use (${colors.red('NOT OK')})`)
+        resolve(false)
       } else {
-        if (status === 'open') {
-          logger.warn(`Port ${colors.bold(port.toString())} is in use (${colors.red('NOT OK')})`)
-          resolve(false)
-        } else {
-          logger.info(`Port ${colors.bold(port.toString())} is available (${colors.green('OK')})`)
-          resolve(true)
-        }
+        logger.info(`Port ${colors.bold(port.toString())} is available (${colors.green('OK')})`)
+        resolve(true)
       }
     })
   })
