@@ -41,9 +41,8 @@ export function waitForInputToHaveValue (inputSelector: string, value: string, o
     }
 
     while (true) {
-      if (options.ignoreCase && inputElement.value.toLowerCase() === value.toLowerCase()) {
-        break
-      } else if (!options.ignoreCase && inputElement.value === value) {
+      if ((options.ignoreCase && inputElement.value.toLowerCase() === value.toLowerCase()) ||
+        (!options.ignoreCase && inputElement.value === value)) {
         break
       }
       await sleep(100)
@@ -58,9 +57,8 @@ export function waitForInputToNotHaveValue (inputSelector: string, value: string
     )
 
     while (true) {
-      if (options.ignoreCase && inputElement.value.toLowerCase() !== value.toLowerCase()) {
-        break
-      } else if (!options.ignoreCase && inputElement.value !== value) {
+      if ((options.ignoreCase && inputElement.value.toLowerCase() !== value.toLowerCase()) ||
+        (!options.ignoreCase && inputElement.value !== value)) {
         break
       }
       await sleep(100)
@@ -76,9 +74,10 @@ export function waitForInputToNotHaveValueAndNotBeEmpty (inputSelector: string, 
 
     while (true) {
       if (inputElement.value !== '') {
-        if (options.ignoreCase && inputElement.value.toLowerCase() !== value.toLowerCase()) {
-          break
-        } else if (!options.ignoreCase && inputElement.value !== value) {
+        if (
+          (options.ignoreCase && inputElement.value.toLowerCase() !== value.toLowerCase()) ||
+          (!options.ignoreCase && inputElement.value !== value)
+        ) {
           break
         }
       }
