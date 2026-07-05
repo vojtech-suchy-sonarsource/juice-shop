@@ -97,7 +97,7 @@ export const checkNecessaryExtraKeysOnSpecialProducts = (products: ProductConfig
     const matchingProducts = products.filter((product) => product[key])
     // @ts-expect-error FIXME implicit any type issue
     if (extra.key && matchingProducts.length === 1 && !matchingProducts[0][extra.key]) {
-      logger.warn(`Product ${colors.italic(matchingProducts[0].name)} configured as ${colors.italic(name)} does't contain necessary ${colors.italic(`${extra.name}`)} (${colors.red('NOT OK')})`)
+      logger.warn(`Product ${colors.italic(matchingProducts[0].name)} configured as ${colors.italic(name)} does't contain necessary ${colors.italic(extra.name)} (${colors.red('NOT OK')})`)
       success = false
     }
   })
