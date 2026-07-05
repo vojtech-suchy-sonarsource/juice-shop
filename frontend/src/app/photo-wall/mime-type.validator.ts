@@ -35,7 +35,6 @@ export const mimeType = (
             isValid = true
             break
           default:
-            isValid = false
             break
         }
         if (isValid) {
