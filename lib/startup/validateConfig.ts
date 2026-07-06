@@ -110,7 +110,7 @@ export const checkUniqueSpecialOnProducts = (products: ProductConfig[]) => {
     // @ts-expect-error FIXME any type issue
     const appliedSpecials = specialProducts.filter(({ key }) => product[key])
     if (appliedSpecials.length > 1) {
-      logger.warn(`Product ${colors.italic(product.name)} is used as ${appliedSpecials.map(({ name }) => `${colors.italic(name)}`).join(' and ')} but can only be used for one challenge (${colors.red('NOT OK')})`)
+      logger.warn(`Product ${colors.italic(product.name)} is used as ${appliedSpecials.map(({ name }) => colors.italic(name)).join(' and ')} but can only be used for one challenge (${colors.red('NOT OK')})`)
       success = false
     }
   })
@@ -158,7 +158,7 @@ export const checkUniqueSpecialOnMemories = (memories: MemoryConfig[]) => {
   memories.forEach((memory) => {
     const appliedSpecials = specialMemories.filter(({ keys }) => memory[keys[0]] && memory[keys[1]])
     if (appliedSpecials.length > 1) {
-      logger.warn(`Memory ${colors.italic(memory.caption)} is used as ${appliedSpecials.map(({ name }) => `${colors.italic(name)}`).join(' and ')} but can only be used for one challenge (${colors.red('NOT OK')})`)
+      logger.warn(`Memory ${colors.italic(memory.caption)} is used as ${appliedSpecials.map(({ name }) => colors.italic(name)).join(' and ')} but can only be used for one challenge (${colors.red('NOT OK')})`)
       success = false
     }
   })
