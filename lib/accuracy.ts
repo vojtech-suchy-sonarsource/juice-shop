@@ -54,7 +54,15 @@ function calculateAccuracy (challengeKey: string, phase: Phase) {
   if (solves[challengeKey][phase]) {
     accuracy = 1 / solves[challengeKey].attempts[phase]
   }
-  logger.info(`Accuracy for '${phase === 'fix it' ? 'Fix It' : 'Find It'}' phase of coding challenge ${colors.cyan(challengeKey)}: ${accuracy > 0.5 ? colors.green(accuracy.toString()) : (accuracy > 0.25 ? colors.yellow(accuracy.toString()) : colors.red(accuracy.toString()))}`)
+  let coloredAccuracy
+  if (accuracy > 0.5) {
+    coloredAccuracy = colors.green(accuracy.toString())
+  } else if (accuracy > 0.25) {
+    coloredAccuracy = colors.yellow(accuracy.toString())
+  } else {
+    coloredAccuracy = colors.red(accuracy.toString())
+  }
+  logger.info(`Accuracy for '${phase === 'fix it' ? 'Fix It' : 'Find It'}' phase of coding challenge ${colors.cyan(challengeKey)}: ${coloredAccuracy}`)
   return accuracy
 }
 
